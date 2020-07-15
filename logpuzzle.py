@@ -26,8 +26,15 @@ def read_urls(filename):
     extracting the hostname from the filename itself, sorting
     alphabetically in increasing order, and screening out duplicates.
     """
-    # +++your code here+++
-    pass
+    puzzle_urls = []
+    with open(filename) as f:
+        text = f.read()
+    pattern = r'/edu\S+.jpg'
+    puzzle_paths = re.findall(pattern, text)
+    for path in puzzle_paths:
+        paths = 'http://code.google.com' + path
+        puzzle_urls.append(paths)
+    return sorted(list(dict.fromkeys(puzzle_urls)), key=lambda url: url[78:])
 
 
 def download_images(img_urls, dest_dir):
@@ -38,8 +45,18 @@ def download_images(img_urls, dest_dir):
     to show each local image file.
     Creates the directory if necessary.
     """
-    # +++your code here+++
-    pass
+    img_name = []
+    os.makedirs(dest_dir)
+    os.chdir(dest_dir)
+    for i in range(len(img_urls)):
+        print("Retrieve... " + "img" + str(i) + ".jpeg")
+        urllib.request.urlretrieve(img_urls[i], "img" + str(i) + ".jpeg")
+        img_name.append("img" + str(i) + ".jpeg")
+    with open('index.html', 'w') as f:
+        f.write('<html><body>')
+        for link in img_name:
+            f.write(f"<img src='{link}'></img>")
+        f.write('</body></html>')
 
 
 def create_parser():
@@ -48,7 +65,6 @@ def create_parser():
     parser.add_argument('-d', '--todir',
                         help='destination directory for downloaded images')
     parser.add_argument('logfile', help='apache logfile to extract urls from')
-
     return parser
 
 
