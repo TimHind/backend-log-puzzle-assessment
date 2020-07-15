@@ -19,7 +19,6 @@ import re
 import sys
 import urllib.request
 import argparse
-from operator import itemgetter
 
 
 def read_urls(filename):
@@ -28,17 +27,15 @@ def read_urls(filename):
     alphabetically in increasing order, and screening out duplicates.
     """
     puzzle_urls = []
-    with open(filename) as f: 
-       text = f.read()
+    with open(filename) as f:
+        text = f.read()
     pattern = r'/edu\S+.jpg'
     puzzle_paths = re.findall(pattern, text)
     for path in puzzle_paths:
         paths = 'http://code.google.com' + path
         puzzle_urls.append(paths)
     return sorted(list(dict.fromkeys(puzzle_urls)), key=lambda url: url[78:])
-    
-    #server_name = 'http://' + re.search(r'code.google.com', filename)
-    #key=r'\w\w\w\w.jpg'
+
 
 def download_images(img_urls, dest_dir):
     """Given the URLs already in the correct order, downloads
@@ -61,8 +58,6 @@ def download_images(img_urls, dest_dir):
             f.write(f"<img src='{link}'></img>")
         f.write('</body></html>')
 
-    
-
 
 def create_parser():
     """Creates an argument parser object."""
@@ -70,7 +65,6 @@ def create_parser():
     parser.add_argument('-d', '--todir',
                         help='destination directory for downloaded images')
     parser.add_argument('logfile', help='apache logfile to extract urls from')
-
     return parser
 
 
@@ -94,5 +88,3 @@ def main(args):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-
-# ANSWERS: Easter Bunny, Eiffel Tower
